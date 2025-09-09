@@ -10,7 +10,6 @@ const RegisterStudent = () => {
     name: "",
     email: "",
     dob: "",
-    password: "",
   });
 
   const handleChange = (e) => {
@@ -83,14 +82,6 @@ const RegisterStudent = () => {
               name="dob"
               onChange={handleChange}
               value={formData.dob}
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={handleChange}
-              value={formData.password}
               required
             />
           </div>

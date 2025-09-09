@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import ProfileImg from "../assets/profile.svg"; // Make sure this exists
 
 const StudentProfile = () => {
   const { studentId } = useParams();
   const [student, setStudent] = useState(null);
   const [profile, setProfile] = useState(ProfileImg);
+  const [documents, setDocuments] = useState([]);
+  const [fees, setFees] = useState([]);
 
   useEffect(() => {
     fetchStudent();
@@ -18,8 +20,19 @@ const StudentProfile = () => {
       setStudent(response.data);
       // If you have a profile image URL in your backend, set it here:
       // setProfile(response.data.profileImage || ProfileImg);
+
+      // Fetch documents for the student's batch
+      if (response.data && response.data.batchId) {
+        const docResponse = await axios.get(`http://localhost:5000/api/documents/${response.data.batchId}`);
+        setDocuments(Array.isArray(docResponse.data) ? docResponse.data : []);
+      }
+
+      // Fetch fee history for the student
+      const feeResponse = await axios.get(`http://localhost:5000/api/batches/student/${studentId}/fees`);
+      setFees(Array.isArray(feeResponse.data) ? feeResponse.data : []);
     } catch (error) {
       console.error("Error fetching student profile:", error);
+      setStudent(null);
     }
   };
 
@@ -138,6 +151,80 @@ const StudentProfile = () => {
                   <span>
                     <span style={{ color: "#2563eb", fontWeight: 700 }}>{mark.score}</span>
                   </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {/* Batch Documents */}
+        <div style={{ width: "100%", marginTop: 24 }}>
+          <h3 style={{
+            fontSize: "1.2rem",
+            fontWeight: 700,
+            color: "#3a0ca3",
+            margin: 0,
+            marginBottom: 10
+          }}>
+            Batch Documents
+          </h3>
+          {documents.length === 0 ? (
+            <p style={{ color: "#888", margin: 0 }}>No documents available for this batch.</p>
+          ) : (
+            <ul style={{ padding: 0, margin: 0, listStyle: "none" }}>
+              {documents.map((doc, idx) => (
+                <li
+                  key={idx}
+                  style={{
+                    padding: "8px 0",
+                    borderBottom: "1px solid #e3e6ee",
+                    fontWeight: 600,
+                    color: "#555"
+                  }}
+                >
+                  <a
+                    href={doc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "#2563eb",
+                      textDecoration: "none",
+                      fontWeight: 700
+                    }}
+                  >
+                    {doc.filename}
+                  </a>{" "}
+                  (Uploaded: {new Date(doc.uploadedAt).toLocaleString()})
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {/* Fee History */}
+        <div style={{ width: "100%", marginTop: 24 }}>
+          <h3 style={{
+            fontSize: "1.2rem",
+            fontWeight: 700,
+            color: "#3a0ca3",
+            margin: 0,
+            marginBottom: 10
+          }}>
+            Fee History
+          </h3>
+          {fees.length === 0 ? (
+            <p style={{ color: "#888", margin: 0 }}>No fee payments yet.</p>
+          ) : (
+            <ul style={{ padding: 0, margin: 0, listStyle: "none" }}>
+              {fees.map((fee, idx) => (
+                <li
+                  key={idx}
+                  style={{
+                    padding: "8px 0",
+                    borderBottom: "1px solid #e3e6ee",
+                    fontWeight: 600,
+                    color: "#555"
+                  }}
+                >
+                  ₹{fee.amount} on {new Date(fee.date).toLocaleString()} {fee.remarks && `(${fee.remarks})`}
                 </li>
               ))}
             </ul>

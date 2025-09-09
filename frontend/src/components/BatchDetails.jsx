@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-
+import FeeUpdateCard from "./FeeUpdateCard";
 const BatchDetails = () => {
   const { batchId } = useParams();
   const [batch, setBatch] = useState(null);
@@ -10,13 +10,52 @@ const BatchDetails = () => {
   const [tests, setTests] = useState([]);
   const [showStudents, setShowStudents] = useState(false);
   const [showTests, setShowTests] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadMsg, setUploadMsg] = useState("");
+  const [documents, setDocuments] = useState([]);
+  const [showFeesModal, setShowFeesModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => {
     fetchBatch();
     fetchStudents();
     fetchTests();
   }, []);
+  
+  // Fetch documents when component mounts or batchId changes
+  useEffect(() => {
+    if (batchId) {
+      axios.get(`/api/documents/${batchId}`)
+        .then(res => setDocuments(Array.isArray(res.data) ? res.data : []))
+        .catch(() => setDocuments([]));
+    }
+  }, [batchId]);
 
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!selectedFile) return;
+    const formData = new FormData();
+    formData.append("document", selectedFile);
+
+    try {
+      await axios.post(`http://localhost:5000/api/documents/upload/${batch.batchId}`, formData, {
+  headers: { "Content-Type": "multipart/form-data" }
+});
+
+      setUploadMsg("Document uploaded!");
+      // Refresh document list
+      const res = await axios.get(`/api/documents/${batchId}`);
+      setDocuments(Array.isArray(res.data) ? res.data : []);
+      setSelectedFile(null);
+    } catch (err) {
+      setUploadMsg("Upload failed.");
+      console.error("Error uploading document:", err); // Add this line
+    }
+  };
   const fetchBatch = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/batches/${batchId}`);
@@ -190,7 +229,29 @@ const BatchDetails = () => {
           )
         )}
       </div>
+      
+      <h3>Upload Document</h3>
+      <form onSubmit={handleUpload}>
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx,.xls,.xlsx"
+          onChange={handleFileChange}
+        />
+        <button type="submit">Upload</button>
+      </form>
+      {uploadMsg && <p>{uploadMsg}</p>}
 
+      <h4>Documents</h4>
+      <ul>
+        {(Array.isArray(documents) ? documents : []).map((doc, idx) => (
+          <li key={idx}>
+            <a href={doc.url} target="_blank" rel="noopener noreferrer">
+              {doc.filename}
+            </a> (Uploaded: {new Date(doc.uploadedAt).toLocaleString()})
+          </li>
+        ))}
+      </ul>
+      
       {/* Tests Section */}
       <div
         style={{
@@ -255,6 +316,29 @@ const BatchDetails = () => {
           )
         )}
       </div>
+      
+      <button onClick={() => setShowFeesModal(true)}>Update Fees</button>
+      {showFeesModal && (
+        <div className="modal">
+          <h3>Update Fees</h3>
+          <ul>
+            {students.map(student => (
+              <li key={student._id}>
+                {student.name}
+                <button onClick={() => setSelectedStudent(student)}>Open</button>
+              </li>
+            ))}
+          </ul>
+          {selectedStudent && (
+            <FeeUpdateCard
+              student={selectedStudent}
+              batchFee={batch.batchFee}
+              onClose={() => setSelectedStudent(null)}
+            />
+          )}
+          <button onClick={() => setShowFeesModal(false)}>Close</button>
+        </div>
+      )}
     </div>
   );
 };
