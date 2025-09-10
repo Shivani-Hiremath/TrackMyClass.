@@ -16,7 +16,7 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, { cors: { origin: "*" } });
-
+const port=process.env.PORT|| 4000;
 // Store connected students by batch
 const batchStudents = {};
 let activeMeetings = {}; // { batchId: roomName }
