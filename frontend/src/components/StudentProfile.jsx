@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import ProfileImg from "../assets/profile.svg"; // Make sure this exists
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://trackmyclass-d6yn.onrender.com");
 
 const StudentProfile = () => {
   const { studentId } = useParams();
@@ -39,19 +39,19 @@ const StudentProfile = () => {
 
   const fetchStudent = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/auth/student/${studentId}`);
+      const response = await axios.get(`https://trackmyclass-d6yn.onrender.com/auth/student/${studentId}`);
       setStudent(response.data);
       // If you have a profile image URL in your backend, set it here:
       // setProfile(response.data.profileImage || ProfileImg);
 
       // Fetch documents for the student's batch
       if (response.data && response.data.batchId) {
-        const docResponse = await axios.get(`http://localhost:5000/api/documents/${response.data.batchId}`);
+        const docResponse = await axios.get(`https://trackmyclass-d6yn.onrender.com/api/documents/${response.data.batchId}`);
         setDocuments(Array.isArray(docResponse.data) ? docResponse.data : []);
       }
 
       // Fetch fee history for the student
-      const feeResponse = await axios.get(`http://localhost:5000/api/batches/student/${studentId}/fees`);
+      const feeResponse = await axios.get(`/api/batches/student/${studentId}/fees`);
       setFees(Array.isArray(feeResponse.data) ? feeResponse.data : []);
     } catch (error) {
       console.error("Error fetching student profile:", error);

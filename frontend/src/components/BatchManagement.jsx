@@ -13,7 +13,7 @@ const BatchManagement = () => {
 
   const fetchBatches = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/batches");
+      const response = await axios.get("https://trackmyclass-d6yn.onrender.com/batches");
       setBatches(response.data);
     } catch (error) {
       console.error("Error fetching batches:", error);
@@ -23,7 +23,7 @@ const BatchManagement = () => {
   const addBatch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/batches", {
+      const response = await axios.post("https://trackmyclass-d6yn.onrender.com/batches", {
         batchName,
         batchId,
         batchFee,
@@ -39,7 +39,7 @@ const BatchManagement = () => {
 
   const deleteBatch = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/batches/${id}`);
+      await axios.delete(`https://trackmyclass-d6yn.onrender.com/batches/${id}`);
       setBatches(batches.filter((batch) => batch._id !== id));
     } catch (error) {
       console.error("Error deleting batch:", error);

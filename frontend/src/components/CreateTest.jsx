@@ -19,7 +19,7 @@ const CreateTest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/tests/create-test", { ...formData, batchId });
+      await axios.post("https://trackmyclass-d6yn.onrender.com/tests/create-test", { ...formData, batchId });
       navigate(`/batch/${batchId}`);
     } catch (error) {
       console.error("Error creating test:", error);

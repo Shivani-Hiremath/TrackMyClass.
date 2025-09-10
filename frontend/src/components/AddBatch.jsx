@@ -11,7 +11,7 @@ const AddBatch = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://localhost:5000/batches/add", {
+      await fetch("https://trackmyclass-d6yn.onrender.com/batches/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ batchName, batchId, batchFee }),

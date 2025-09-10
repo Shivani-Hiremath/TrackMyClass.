@@ -9,7 +9,7 @@ const FeeUpdateCard = ({ student, batchFee, onClose }) => {
 
   useEffect(() => {
     // Fetch fee history when component mounts or student changes
-    axios.get(`http://localhost:5000/api/batches/student/${student._id}/fees`)
+    axios.get(`https://trackmyclass-d6yn.onrender.com/api/batches/student/${student._id}/fees`)
       .then(res => setFees(Array.isArray(res.data) ? res.data : []))
       .catch(() => setFees([]));
   }, [student]);
@@ -21,12 +21,12 @@ const FeeUpdateCard = ({ student, batchFee, onClose }) => {
     e.preventDefault();
     if (!amount) return;
     try {
-      await axios.post(`http://localhost:5000/api/batches/student/${student._id}/fees`, { amount: Number(amount), remarks });
+      await axios.post(`https://trackmyclass-d6yn.onrender.com/api/batches/student/${student._id}/fees`, { amount: Number(amount), remarks });
       setMsg("Fee updated!");
       setAmount("");
       setRemarks("");
       // Refresh fee history
-      const res = await axios.get(`http://localhost:5000/api/batches/student/${student._id}/fees`);
+      const res = await axios.get(`https://trackmyclass-d6yn.onrender.com/api/batches/student/${student._id}/fees`);
       setFees(Array.isArray(res.data) ? res.data : []);
     } catch {
       setMsg("Error updating fee.");
