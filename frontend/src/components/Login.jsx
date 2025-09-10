@@ -20,7 +20,7 @@ const Login = () => {
       if (response.data.role === "admin") {
         navigate("/admin-dashboard");
       } else {
-        navigate("/student-dashboard");
+        navigate(`/student/${response.data.user._id}`);
       }
     } catch (err) {
       setError("Invalid credentials");

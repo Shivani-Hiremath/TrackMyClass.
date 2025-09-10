@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import ProfileImg from "../assets/profile.svg"; // Make sure this exists
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 const StudentProfile = () => {
   const { studentId } = useParams();
@@ -9,10 +12,30 @@ const StudentProfile = () => {
   const [profile, setProfile] = useState(ProfileImg);
   const [documents, setDocuments] = useState([]);
   const [fees, setFees] = useState([]);
+  const [meetingRoom, setMeetingRoom] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     fetchStudent();
   }, []);
+
+  useEffect(() => {
+    // Join batch room for notifications
+    if (student && student.batchId) {
+      socket.emit("joinBatch", { batchId: student.batchId, studentId });
+    }
+
+    // Listen for class start
+    socket.on("startClass", ({ roomName }) => {
+      alert("Class is starting! Click the button to join or rejoin anytime.");
+      setMeetingRoom(roomName);
+      setShowNotification(true);
+    });
+
+    return () => {
+      socket.off("startClass");
+    };
+  }, [student, studentId]);
 
   const fetchStudent = async () => {
     try {
@@ -36,6 +59,13 @@ const StudentProfile = () => {
     }
   };
 
+  const handleJoinClass = () => {
+    if (meetingRoom) {
+      window.open(`https://meet.jit.si/${meetingRoom}`, "_blank");
+      setShowNotification(false); // Hide notification after joining
+    }
+  };
+
   if (!student) return (
     <div style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <span style={{ color: "#3a0ca3", fontWeight: 700, fontSize: "1.3rem" }}>Loading...</span>
@@ -55,15 +85,13 @@ const StudentProfile = () => {
     >
       <div
         style={{
-          borderRadius: 22,
-          boxShadow: "0 8px 32px rgba(58,12,163,0.10)",
-          padding: "40px 36px",
-          maxWidth: 420,
           width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          background: "#fff"
+    maxWidth: "800px",
+    padding: "20px 30px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    background: "#fff"
         }}
       >
         {/* Profile Image */}
@@ -230,6 +258,19 @@ const StudentProfile = () => {
             </ul>
           )}
         </div>
+        {showNotification && meetingRoom && (
+          <div className="class-notification" style={{ marginTop: 20, padding: "10px 20px", background: "#e1f5fe", borderRadius: 8, width: "100%" }}>
+            <p style={{ margin: 0, color: "#01579b" }}>Class is starting! Click below to join.</p>
+            <button onClick={handleJoinClass} style={{ marginTop: 8, padding: "10px 20px", background: "#01579b", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer" }}>
+              Join Class
+            </button>
+          </div>
+        )}
+        {meetingRoom && (
+          <button onClick={handleJoinClass} style={{ marginTop: 12, padding: "10px 20px", background: "#4caf50", color: "#fff", border: "none", borderRadius: 4, cursor: "pointer" }}>
+            Rejoin Class
+          </button>
+        )}
       </div>
     </div>
   );

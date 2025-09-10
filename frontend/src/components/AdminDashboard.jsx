@@ -29,201 +29,137 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div>
-      {/* Modern Header */}
-      <div
-        style={{
-          width: "100vw",
-          maxWidth: "100%",
-          padding: "40px 40px 16px 40px",
-          background: "transparent",
-          boxSizing: "border-box",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "18px",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "2.8rem",
-              fontWeight: 900,
-              color: "#2d1e6b",
-              letterSpacing: "-2px",
-              margin: 0,
-              textShadow: "0 4px 24px #bdb2ff44, 0 1px 0 #fff",
-              borderBottom: "3px solid #7209b7",
-              paddingBottom: "8px",
-              marginBottom: "8px",
-              width: "fit-content"
-            }}
-          >
+    <div style={{
+      minHeight: "100vh",
+      background: "#f6faff",
+      fontFamily: "'Inter', Arial, sans-serif",
+      padding: "0 0 48px 0"
+    }}>
+      <div style={{
+        maxWidth: "1100px",
+        margin: "48px auto 0 auto",
+        padding: "0 16px"
+      }}>
+        {/* Header */}
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          marginBottom: "18px"
+        }}>
+          <h1 style={{
+            fontSize: "2.3rem",
+            fontWeight: 800,
+            color: "#00226bff",
+            marginBottom: "0",
+            borderBottom: "3px solid #e3eafe",
+            display: "inline-block",
+            paddingBottom: "6px",
+            letterSpacing: "1px"
+          }}>
             Admin Dashboard
           </h1>
-          <div style={{ display: "flex", gap: "18px" }}>
+          <div style={{ display: "flex", gap: "16px", marginTop: "10px" }}>
             <button
               onClick={() => navigate("/add-batch")}
-              style={{
-                background: "linear-gradient(90deg, #4361ee 0%, #7209b7 100%)",
-                color: "#fff",
-                padding: "12px 32px",
-                borderRadius: "30px",
-                fontWeight: 700,
-                fontSize: "1.1rem",
-                border: "none",
-                boxShadow: "0 2px 12px rgba(67,97,238,0.10)",
-                cursor: "pointer",
-                transition: "background 0.2s, transform 0.2s",
-                marginTop: "0",
-              }}
-              onMouseOver={e =>
-                (e.currentTarget.style.background =
-                  "linear-gradient(90deg, #7209b7 0%, #4361ee 100%)")
-              }
-              onMouseOut={e =>
-                (e.currentTarget.style.background =
-                  "linear-gradient(90deg, #4361ee 0%, #7209b7 100%)")
-              }
             >
               Add New Batch
             </button>
-            <button
-              onClick={() => navigate("/register-admin")}
-              style={{
-                background: "linear-gradient(90deg, #4361ee 0%, #7209b7 100%)",
-                color: "#fff",
-                padding: "12px 32px",
-                borderRadius: "30px",
-                fontWeight: 700,
-                fontSize: "1.1rem",
-                border: "none",
-                boxShadow: "0 2px 12px rgba(67,97,238,0.10)",
-                cursor: "pointer",
-                transition: "background 0.2s, transform 0.2s",
-                marginTop: "0",
-              }}
-              onMouseOver={e =>
-                (e.currentTarget.style.background =
-                  "linear-gradient(90deg, #7209b7 0%, #4361ee 100%)")
-              }
-              onMouseOut={e =>
-                (e.currentTarget.style.background =
-                  "linear-gradient(90deg, #4361ee 0%, #7209b7 100%)")
-              }
-            >
+            <button>
               Add Admin
             </button>
           </div>
         </div>
-        {/* Divider line */}
-        <div
-          style={{
-            width: "100%",
-            height: "2px",
-            background: "linear-gradient(90deg, #e0e7ff 0%, #bdb2ff 100%)",
-            margin: "28px 0 18px 0",
-            borderRadius: "2px",
-          }}
-        />
-        <h2
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: 700,
-            color: "#3a0ca3",
-            marginTop: "0",
-            marginBottom: "0",
-          }}
-        >
+        <div style={{
+          borderBottom: "2px solid #e3eafe",
+          margin: "18px 0 28px 0"
+        }} />
+        <h2 style={{
+          fontSize: "1.35rem",
+          fontWeight: 700,
+          color: "#1746a0",
+          marginBottom: "18px",
+          borderBottom: "2px solid #e3eafe",
+          display: "inline-block",
+          paddingBottom: "4px",
+          letterSpacing: "0.5px"
+        }}>
           Existing Batches
         </h2>
-      </div>
 
-      {/* ...rest of your batch grid code remains unchanged... */}
-      {batches.length > 0 ? (
-        <div
-          className="batch-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "32px",
-            padding: "0 40px 40px 40px",
-            width: "100vw",
-            boxSizing: "border-box",
-          }}
-        >
-          {batches.map((batch) => (
-            <div
-              key={batch._id}
-              style={{
-                minHeight: 140,
-                borderRadius: 10,
-                padding: "24px 20px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                border: "1.5px solid #e3e6ee",
-                background: "rgba(255,255,255,0.85)",
-                transition: "box-shadow 0.2s, background 0.2s",
-                boxShadow: "0 2px 8px rgba(67,97,238,0.04)",
-              }}
-              onMouseOver={e => e.currentTarget.style.background = "#f6f8fc"}
-              onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.85)"}
-            >
-              <div>
-                <p style={{ fontWeight: 700, fontSize: "1.2rem", marginBottom: 6 }}>{batch.batchName}</p>
-                <p style={{ fontWeight: 500, color: "#555", marginBottom: 2 }}>Batch ID: {batch.batchId}</p>
-                <p style={{ fontWeight: 500, color: "#555" }}>Fee: ₹{batch.batchFee}</p>
+        {batches.length > 0 ? (
+          <div
+            className="batch-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "28px",
+              marginTop: "0"
+            }}
+          >
+            {batches.map((batch) => (
+              <div
+                key={batch._id}
+                style={{
+                  minHeight: 120,
+                  borderRadius: 14,
+                  padding: "22px 18px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  border: "1.5px solid #e3eafe",
+                  background: "#fff",
+                  boxShadow: "0 2px 8px rgba(67,97,238,0.04)",
+                  transition: "box-shadow 0.2s, background 0.2s"
+                }}
+              >
+                <div>
+                  <p style={{
+                    fontWeight: 700,
+                    fontSize: "1.12rem",
+                    marginBottom: 6,
+                    color: "#2563eb",
+                    letterSpacing: "0.5px"
+                  }}>{batch.batchName}</p>
+                  <p style={{
+                    fontWeight: 500,
+                    color: "#555",
+                    marginBottom: 2
+                  }}>Batch ID: <span style={{ color: "#1746a0" }}>{batch.batchId}</span></p>
+                  <p style={{
+                    fontWeight: 500,
+                    color: "#555"
+                  }}>Fee: <span style={{ color: "#2563eb" }}>₹{batch.batchFee}</span></p>
+                </div>
+                <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
+                  <button
+                    onClick={() => navigate(`/batch/${batch.batchId}`)}
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleDelete(batch._id)}
+                    style={{
+                      background: "linear-gradient(90deg, #ef4444 0%, #dc2626 100%)",
+                      color: "#fff"
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div style={{ display: "flex", gap: "16px", marginTop: "18px" }}>
-                <button
-                  onClick={() => navigate(`/batch/${batch.batchId}`)}
-                  style={{
-                    background: "#2563eb",
-                    color: "#fff",
-                    padding: "8px 20px",
-                    borderRadius: 6,
-                    border: "none",
-                    fontWeight: 600,
-                    fontSize: "1rem",
-                    cursor: "pointer",
-                    transition: "background 0.2s"
-                  }}
-                  onMouseOver={e => e.currentTarget.style.background = "#1d4ed8"}
-                  onMouseOut={e => e.currentTarget.style.background = "#2563eb"}
-                >
-                  View
-                </button>
-                <button
-                  onClick={() => handleDelete(batch._id)}
-                  style={{
-                    background: "#ef4444",
-                    color: "#fff",
-                    padding: "8px 20px",
-                    borderRadius: 6,
-                    border: "none",
-                    fontWeight: 600,
-                    fontSize: "1rem",
-                    cursor: "pointer",
-                    transition: "background 0.2s"
-                  }}
-                  onMouseOver={e => e.currentTarget.style.background = "#dc2626"}
-                  onMouseOut={e => e.currentTarget.style.background = "#ef4444"}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="container" style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <p>No batches found.</p>
-        </div>
-      )}
+            ))}
+          </div>
+        ) : (
+          <div style={{
+            padding: "32px",
+            textAlign: "center",
+            color: "#555"
+          }}>
+            <p>No batches found.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
